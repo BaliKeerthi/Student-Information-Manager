@@ -129,6 +129,14 @@
 
         b,li { color: red; }
         #k5 { background-color: #43b1d5; }
+
+        img { background-color: white; cursor: pointer; }
+
+        .forminline img {
+            margin-left: 10px;
+            height: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -141,7 +149,7 @@
             <strong>Student List</strong>
             <div class="add">
                 <img src="./resources/user_add.png" onclick="addBtn()" width="16">
-                <a href="#" onclick="addBtn();return false"><strong>Add</strong></a>
+                <a href="#" onclick="addBtn(); return false"><strong>Add</strong></a>
             </div>
         </td>
     </tr>
@@ -152,19 +160,20 @@
 
 <div class="close-btn">
     <img src="./resources/cancel.png" id="hee" onclick="closeForm()">
-    <div id="helpTips"></div>
+
+    <div id="helpTips"><p>Errors:</p></div>
 
     <form id="studentForm">
         <div class="forminline">
             <label>Name <span>*</span>:</label>
             <input type="text" id="name">
-            <img src="./resources/Help.png" width="18">
+            <img src="./resources/Help.png">
         </div>
 
         <div class="forminline">
             <label>E-mail <span>*</span>:</label>
             <input type="text" id="email">
-            <img src="./resources/Help.png" width="18">
+            <img src="./resources/Help.png">
         </div>
 
         <div class="forminline">
@@ -175,7 +184,7 @@
                 <option>BE</option>
                 <option>B.Tech</option>
             </select>
-            <img src="./resources/Help.png" width="18">
+            <img src="./resources/Help.png">
         </div>
 
         <div class="form-buttons">
@@ -187,10 +196,11 @@
 
 <script>
 let editRow = null;
+let originalData = {};
 
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
+    if (this.readyState == 4 && this.status == 200) {
         myFunction(this);
     }
 };
@@ -203,43 +213,21 @@ function myFunction(xmlData) {
     var students = xmlDoc.getElementsByTagName("student");
 
     for (var i = 0; i < students.length; i++) {
-        table1 += "<tr><td>" + (i+1) + "</td><td>" +
-            students[i].getElementsByTagName("name")[0].textContent + "</td><td>" +
-            students[i].getElementsByTagName("email")[0].textContent + "</td><td>" +
-            students[i].getElementsByTagName("Qualification")[0].textContent + "</td><td>" +
-            students[i].getElementsByTagName("creation")[0].textContent + "</td><td>" +
-            "<img src='./resources/user_edit.png' width='16' onclick='click1(this)'> " +
-            "<img src='./resources/cancel.png' width='16' onclick='click2(this)'></td></tr>";
+        table1 += "<tr><td></td><td>" +
+            students[i].getElementsByTagName("name")[0].childNodes[0].nodeValue + "</td><td>" +
+            students[i].getElementsByTagName("email")[0].childNodes[0].nodeValue + "</td><td>" +
+            students[i].getElementsByTagName("Qualification")[0].childNodes[0].nodeValue + "</td><td>" +
+            students[i].getElementsByTagName("creation")[0].childNodes[0].nodeValue + "</td><td>" +
+            "<img src='./resources/user_edit.png' onclick='click1(this)' width='16'> " +
+            "<img src='./resources/cancel.png' onclick='click2(this)' width='16'></td></tr>";
     }
+
     document.getElementById("demo").innerHTML = table1;
-}
-
-function click1(el) {
-    editRow = el.closest("tr");
-    document.getElementById("name").value = editRow.cells[1].innerText;
-    document.getElementById("email").value = editRow.cells[2].innerText;
-    document.getElementById("qualification").value = editRow.cells[3].innerText;
-    addBtn();
-}
-
-function click2(el) {
-    if (confirm("Delete this row?")) {
-        el.closest("tr").remove();
-    }
-}
-
-function addBtn() {
-    document.querySelector(".close-btn").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-}
-
-function closeForm() {
-    document.querySelector(".close-btn").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
+    updateSerialNumbers();
 }
 </script>
-
 </body>
 </html>
+
 
 
